@@ -29,7 +29,7 @@ exports.storeUser = async (req, res) => {
         res.status(201).json({ message: "You're on the list! We'll notify you when we launch in your country.", user: newUser});
     } catch (error) {
         console.error('Error storing user data or sending email:', error);
-        res.status(500).json({ message: 'Oops, you have already been added to our waitlist.', error});
+        res.status(500).json({ message: 'Oops, you have already been added to our waitlist.'});
     }
 };
 
