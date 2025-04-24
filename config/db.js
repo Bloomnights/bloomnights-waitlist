@@ -2,32 +2,31 @@ const { Pool } = require('pg');
 const Knex = require('knex');
 require('dotenv').config();
 
-// Initialize pg Pool
+// Load connection string
+const connectionString = process.env.DATABASE_URL;
+
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Initialize pg Pool using DATABASE_URL
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASS,
-  port: process.env.DB_PORT,
+  connectionString,
+  ssl: isProduction ? { rejectUnauthorized: false } : false,
 });
 
 pool.on('connect', () => {
   console.log('Connected to the database');
 });
 
-// Initialize Knex
+// Initialize Knex using DATABASE_URL
 const knex = Knex({
   client: 'pg',
   connection: {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
-    ssl: { rejectUnauthorized: false }, // Enable SSL if necessary
+    connectionString,
+    ssl: isProduction ? { rejectUnauthorized: false } : false,
   },
   migrations: {
-    directory: '../migrations', // Ensure this path is correct and exists
+    directory: './migrations',
   },
 });
 
@@ -40,7 +39,7 @@ const runMigrations = async () => {
   } catch (error) {
     console.error('Migration error:', error);
   } finally {
-    knex.destroy(); // Close Knex connection after migration
+    knex.destroy();
   }
 };
 

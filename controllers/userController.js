@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 const emailService = require('../services/emailService');
 const fs = require('fs');
 const path = require('path');
+const { query } = require('../config/db');
 
 exports.storeUser = async (req, res) => {
     const { username, email, phone, country } = req.body;
@@ -33,12 +34,34 @@ exports.storeUser = async (req, res) => {
 };
 
 exports.deleteUser = async (req, res) => {
-    const { email } = req.body;
+    const { email } = req.query;
+  
+    if (!email) {
+      return res.status(400).json(
+        { 
+          message: 'Error deleting user', 
+          error: 'Email query parameter is required' 
+        }
+      );
+    }
 
+    console.log('Deleting user with email:', email);
+  
     try {
-        await query('DELETE FROM users WHERE email = $1', [email]);
-        res.status(201).json({message: `User with email ${email} has been deleted`});
+      await query('DELETE FROM users WHERE email = $1', [email]);
+      res.status(200).json(
+        { 
+          message: `User with email ${email} has been deleted` 
+        }
+      );
     } catch (err) {
-        res.status(500).json({ message: 'Error deleting user:', err});
+      console.error('Error deleting user:', err);
+      res.status(500).json(
+        { 
+          message: 'Error deleting user', 
+          error: err.message 
+        }
+      );
     }
 };
+  
