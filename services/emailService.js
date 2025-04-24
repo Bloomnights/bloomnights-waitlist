@@ -13,7 +13,7 @@ exports.sendEmail = async (to, subject, htmlContent) => {
     });
 
     const mailOptions = {
-        from: `Bloomnights <noreply@bloomnights.com>`,
+        from: `Bloomnights <no-reply@chainconsults.com>`,
         to,
         subject,
         html: htmlContent,
