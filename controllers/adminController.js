@@ -71,7 +71,7 @@ exports.getUsers = async (req, res) => {
     try {
         const result = await query('SELECT * FROM users');
         if (result.rows.length === 0) {
-            return res.status(200).json({ message: 'No Users Have SIgned Up For This Waitlist' });
+            return res.status(200).json({ message: 'No Users Have Signed Up For This Waitlist' });
         }
         res.json(result.rows);
     } catch (error) {
