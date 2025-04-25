@@ -5,11 +5,11 @@ const path = require('path');
 const { query } = require('../config/db');
 
 exports.storeUser = async (req, res) => {
-    const { username, email, phone, country } = req.body;
+    const { firstname, lastname, email, phone, country } = req.body;
 
     try {
         // Store the user in the database
-        const newUser = await User.createUser(username, email, phone, country);
+        const newUser = await User.createUser(firstname, lastname, email, phone, country);
 
         // Load the email template
         const templatePath = path.join(__dirname, '../views/emailTemplate.html');
@@ -17,10 +17,9 @@ exports.storeUser = async (req, res) => {
 
         // Replace placeholders with actual data
         const emailContent = emailTemplate
-            .replace('{{username}}', username)
+            .replace('{{firstname}}', firstname)
+            .replace('{{lastname}}', lastname)
             .replace('{{email}}', email)
-            .replace('{{phone}}', phone)
-            .replace('{{country}}', country);
 
         // Send an email to the user
         await emailService.sendEmail(email, 'Thank you for Joining', emailContent);
