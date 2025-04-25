@@ -1,11 +1,11 @@
 const db = require('../config/db');
 
-exports.createUser = async (fullname, email, phone, country) => {
+exports.createUser = async (firstname, lastname, email) => {
     const query = `
-        INSERT INTO users (fullname, email, phone, country)
-        VALUES ($1, $2, $3, $4) RETURNING *;
+        INSERT INTO users (firstname, lastname, email)
+        VALUES ($1, $2, $3) RETURNING *;
     `;
-    const values = [fullname, email, phone, country];
+    const values = [firstname, lastname, email];
     const result = await db.query(query, values);
     return result.rows[0];
 };

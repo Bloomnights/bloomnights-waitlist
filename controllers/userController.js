@@ -5,11 +5,11 @@ const path = require('path');
 const { query } = require('../config/db');
 
 exports.storeUser = async (req, res) => {
-    const { firstname, lastname, email, phone, country } = req.body;
+    const { firstname, lastname, email } = req.body;
 
     try {
         // Store the user in the database
-        const newUser = await User.createUser(firstname, lastname, email, phone, country);
+        const newUser = await User.createUser(firstname, lastname, email);
 
         // Load the email template
         const templatePath = path.join(__dirname, '../views/emailTemplate.html');
@@ -28,7 +28,7 @@ exports.storeUser = async (req, res) => {
         res.status(201).json({ message: "You're on the list! We'll notify you when we launch in your country.", user: newUser});
     } catch (error) {
         console.error('Error storing user data or sending email:', error);
-        res.status(500).json({ message: 'Oops, you have already been added to our waitlist.'});
+        res.status(500).json({ message: 'Oops, you have already been added to our waitlist.', error: error.message});
     }
 };
 
